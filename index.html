@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090609">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CART3R Scooter">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>CART3R SCOOTER TOOL</title>
+<style>
+:root{color-scheme:dark;--bg:#080608;--panel:#150d11;--red:#ff344f;--muted:#bdaab0;--line:#67202d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#241018 0,#080608 48%);color:#f7edf0;font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 15px calc(24px + env(safe-area-inset-bottom))}
+main{max-width:720px;margin:auto}.top{padding:22px 4px 16px}.eyebrow{color:#ff7183;font:700 11px ui-monospace,monospace;letter-spacing:2px}.title{font-size:29px;font-weight:900;letter-spacing:-1px;margin:7px 0}.sub{color:var(--muted);font-size:11px;letter-spacing:1px}
+.card{background:linear-gradient(145deg,#1b1015,#100b0e);border:1px solid var(--line);border-radius:17px;padding:16px;margin:12px 0;box-shadow:0 8px 30px #0008}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.pill{border:1px solid #8d293a;border-radius:99px;padding:5px 9px;color:#ff8291;font-size:11px;font-weight:700}
+h2{font-size:12px;color:#ff7183;letter-spacing:1.3px;margin:4px 0 13px}.big{font-size:24px;font-weight:800}.muted{color:var(--muted);font-size:12px;line-height:1.5}
+button{background:#e72e49;color:white;border:0;border-radius:12px;padding:13px 15px;font-weight:800;font-size:14px;width:100%;margin-top:9px}
+button.secondary{background:#25141a;border:1px solid #743040;color:#ffdce2}button:active{transform:scale(.99)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{background:#100b0e;border:1px solid #49202a;border-radius:13px;padding:13px}.tile b{display:block;margin:5px 0}.tile span{color:var(--muted);font-size:11px}
+label{display:block;color:#d8c4ca;font-size:12px;margin:10px 0 5px}input,select,textarea{width:100%;background:#090709;color:#fff;border:1px solid #60303b;border-radius:10px;padding:12px;font:inherit}textarea{min-height:80px;resize:vertical}
+nav{display:flex;gap:7px;overflow:auto;padding:5px 0 12px}nav button{white-space:nowrap;width:auto;margin:0;padding:9px 12px;background:#1b1115;border:1px solid #52212d;font-size:12px}nav button.active{background:#a51e35}
+.page{display:none}.page.active{display:block}.log{font:11px ui-monospace,monospace;color:#cbb9bf;white-space:pre-wrap;max-height:180px;overflow:auto}
+.notice{border-left:3px solid var(--red);padding:9px 11px;background:#211017;border-radius:7px;color:#e8cbd1;font-size:12px;line-height:1.5}
+footer{text-align:center;color:#8e777e;font:10px ui-monospace,monospace;padding:20px 0}
+</style>
+</head>
+<body><main>
+<header class="top">
+<div class="eyebrow">CART3R.JAILBREAK // PERSONAL TOOL</div>
+<div class="title">SCOOTER TOOL<span style="color:var(--red)">.</span></div>
+<div class="sub">XIAOMI ELECTRIC SCOOTER 6 PRO · iPHONE EDITION</div>
+</header>
+<nav>
+<button class="active" data-page="dash">Dashboard</button><button data-page="diag">Diagnostics</button><button data-page="profile">Scooter profile</button><button data-page="notes">Notes & logs</button>
+</nav>
+<section id="dash" class="page active">
+<div class="card"><div class="row"><b>System overview</b><span class="pill">LOCAL APP</span></div><p class="big">READY</p><div class="muted">This app runs locally in your browser. No scooter connection has been made.</div></div>
+<div class="grid">
+<div class="tile"> <span>MODEL</span><b>Xiaomi 6 Pro</b><span>Profile default</span></div>
+<div class="tile"><span>REGION</span><b>Germany / EU</b><span>Reported by owner</span></div>
+<div class="tile"><span>CONNECTION</span><b id="conn">Not connected</b><span>BLE not available in Safari</span></div>
+<div class="tile"><span>FIRMWARE</span><b id="firmware">Unknown</b><span>Enter in profile</span></div>
+</div>
+<div class="card"><h2>QUICK ACTIONS</h2><button onclick="showPage('diag')">Open diagnostics checklist</button><button class="secondary" onclick="showPage('profile')">Edit scooter profile</button></div>
+<div class="notice">Safety note: use diagnostic tools only while parked. This app does not unlock speed limits, alter motor output, change braking, or flash firmware.</div>
+</section>
+<section id="diag" class="page">
+<div class="card"><h2>DIAGNOSTIC CHECKLIST</h2>
+<p class="muted">Use this checklist alongside the official Xiaomi Home app. It does not read live scooter telemetry.</p>
+<div id="checks"></div>
+<button onclick="saveChecks()">Save checklist</button>
+</div>
+<div class="card"><h2>CONNECTION STATUS</h2><div class="muted">iPhone Safari does not expose a general-purpose Bluetooth LE API for connecting to arbitrary scooter controllers. A native iOS app using CoreBluetooth would be required, plus a verified protocol for this exact controller revision.</div></div>
+</section>
+<section id="profile" class="page">
+<div class="card"><h2>MY SCOOTER</h2>
+<label>Model</label><input id="model" value="Xiaomi Electric Scooter 6 Pro">
+<label>Region / version</label><select id="region"><option>Germany / EU (20 km/h approved version)</option><option>Other / not confirmed</option></select>
+<label>Firmware version (optional)</label><input id="fw" placeholder="e.g. version shown in Xiaomi Home">
+<label>Controller label / revision (optional)</label><input id="controller" placeholder="Type exactly as printed">
+<label>Notes</label><textarea id="profileNotes" placeholder="Add details from the scooter label or app…"></textarea>
+<button onclick="saveProfile()">Save profile on this iPhone</button>
+<p class="muted">Profile data is stored in this browser on this device only.</p>
+</div>
+</section>
+<section id="notes" class="page">
+<div class="card"><h2>LOCAL DIAGNOSTIC LOG</h2><label>New note</label><textarea id="newNote" placeholder="Record an error code, symptom, or inspection result…"></textarea><button onclick="addNote()">Add note</button><div id="log" class="log" style="margin-top:14px">No notes yet.</div><button class="secondary" onclick="clearNotes()">Clear notes</button></div>
+</section>
+<footer>CART3R SCOOTER TOOL · VERSION 1.0 · LOCAL-ONLY PROTOTYPE</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+const items=['Scooter powers on normally','Tyres inspected and correctly inflated','Brakes checked while stationary','No visible cable or frame damage','Xiaomi Home app shows no active warning'];
+function renderChecks(){ $('checks').innerHTML=items.map((x,i)=>`<label style="display:flex;gap:9px;align-items:center"><input style="width:auto" type="checkbox" id="c${i}"> ${x}</label>`).join('');let saved=JSON.parse(localStorage.getItem('checks')||'[]');saved.forEach((v,i)=>{if($('c'+i))$('c'+i).checked=v})}
+function saveChecks(){localStorage.setItem('checks',JSON.stringify(items.map((_,i)=>$('c'+i).checked)));alert('Checklist saved on this iPhone.')}
+function saveProfile(){let p={model:$('model').value,region:$('region').value,fw:$('fw').value,controller:$('controller').value,notes:$('profileNotes').value};localStorage.setItem('profile',JSON.stringify(p));$('firmware').textContent=p.fw||'Unknown';alert('Profile saved locally.')}
+function loadProfile(){let p=JSON.parse(localStorage.getItem('profile')||'null');if(!p)return;$('model').value=p.model;$('region').value=p.region;$('fw').value=p.fw;$('controller').value=p.controller;$('profileNotes').value=p.notes;$('firmware').textContent=p.fw||'Unknown'}
+function renderLog(){let a=JSON.parse(localStorage.getItem('notes')||'[]');$('log').textContent=a.length?a.map(x=>'• '+x).join('\n'):'No notes yet.'}
+function addNote(){let v=$('newNote').value.trim();if(!v)return;let a=JSON.parse(localStorage.getItem('notes')||'[]');a.unshift(new Date().toLocaleString()+' — '+v);localStorage.setItem('notes',JSON.stringify(a));$('newNote').value='';renderLog()}
+function clearNotes(){if(confirm('Delete all local notes?')){localStorage.removeItem('notes');renderLog()}}
+renderChecks();loadProfile();renderLog();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
